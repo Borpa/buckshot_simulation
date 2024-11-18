@@ -71,12 +71,6 @@ def simulation_step(
                 ]
             )
             file.write(entry)
-
-        # with open("log.txt", "a") as file:
-        #    for entry in log:
-        #        file.write(str(entry) + "\n")
-        #    file.write("\n")
-        # log = []
         return None
 
     current_round = Round(current_load.pop(0))
@@ -101,26 +95,6 @@ def simulation_step(
 
     new_player, new_opponent = shoot(player, opponent, current_round, current_action)
 
-    # if player.name == "Player 1":
-    #    player1_hp = player.lost_hp
-    #    player2_hp = opponent.lost_hp
-    # else:
-    #    player2_hp = player.lost_hp
-    #    player1_hp = opponent.lost_hp
-
-    # new_log = (
-    #    "Turn: {turn}, Shooter: {shooter}, Opponent: {opponent}, Current round: {round}, Action: {action}, Player 1 lost HP: {p1_hp}, Player 2 lost HP: {p2_hp},Next turn: {next}".format(
-    #        turn=turn_count,
-    #        shooter=player.name,
-    #        opponent=opponent.name,
-    #        round=current_round.name,
-    #        action=current_action.name,
-    #        p1_hp=player1_hp,
-    #        p2_hp=player2_hp,
-    #        next=new_player.name,
-    #    ),
-    # )
-    # log.append(new_log)
     simulation_step(
         current_load=current_load,
         player=new_player,
@@ -157,18 +131,21 @@ def simulation(live_rounds, blank_rounds):
                 turn_count=turn_count,
                 action_list=list(action_list),
                 log=log,
-                # log=[str(current_load), str(action_list)],
                 live=live_rounds,
                 blanks=blank_rounds,
             )
 
 
 if __name__ == "__main__":
-    #with open("log.csv", "w") as file:
+    # with open("log.csv", "w") as file:
     #    file.write("first_action,P1_lost_hp,P2_lost_hp,next_turn\n")
-#
-    #simulation(2, 2)
+    #
+    # simulation(2, 2)
 
     df = pd.read_csv("log.csv")
-    df = df.groupby(["first_action"]).agg({"P1_lost_hp": "mean", "P2_lost_hp": "mean"}).reset_index()
+    df = (
+        df.groupby(["first_action"])
+        .agg({"P1_lost_hp": "mean", "P2_lost_hp": "mean"})
+        .reset_index()
+    )
     df.to_csv("average_lost_hp.csv", index=False)
