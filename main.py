@@ -47,7 +47,14 @@ def shoot(player, opponent, current_round, action):
 
 
 def simulation_step(
-    current_load, player, opponent, turn_count, action_list, log, live, blanks
+    current_load,
+    player,
+    opponent,
+    turn_count,
+    action_list,
+    log,
+    live_rounds,
+    blank_rounds,
 ):
     if len(current_load) == 0:
         if player.name == "Player 1":
@@ -79,19 +86,19 @@ def simulation_step(
     if log.first_action is None:
         log.first_action = current_action
 
-    if (live == 0) and (current_action == Actions.Shoot_opponent):
+    if (live_rounds == 0) and (current_action == Actions.Shoot_opponent):
         return None
 
-    if (blanks == 0) and (current_action == Actions.Shoot_self):
+    if (blank_rounds == 0) and (current_action == Actions.Shoot_self):
         return None
 
     turn_count += 1
 
     match current_round:
         case Round.Live:
-            live -= 1
+            live_rounds -= 1
         case Round.Blank:
-            blanks -= 1
+            blank_rounds -= 1
 
     new_player, new_opponent = shoot(player, opponent, current_round, current_action)
 
@@ -102,8 +109,8 @@ def simulation_step(
         turn_count=turn_count,
         action_list=action_list,
         log=log,
-        live=live,
-        blanks=blanks,
+        live_rounds=live_rounds,
+        blank_rounds=blank_rounds,
     )
 
 
@@ -131,8 +138,8 @@ def simulation(live_rounds, blank_rounds):
                 turn_count=turn_count,
                 action_list=list(action_list),
                 log=log,
-                live=live_rounds,
-                blanks=blank_rounds,
+                live_rounds=live_rounds,
+                blank_rounds=blank_rounds,
             )
 
 
